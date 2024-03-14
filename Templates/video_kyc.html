@@ -4,30 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video KYC</title>
+    <style>
+        body {
+            background-image: url('path/to/your/image.jpg'); /* Replace 'path/to/your/image.jpg' with the actual path to your image */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        #videoContainer {
+            text-align: center;
+        }
+
+        #registerForm {
+            background-color: rgba(255, 255, 255, 0.8); /* Adjust the opacity as needed */
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        #registerForm input[type="text"],
+        #registerForm input[type="password"],
+        #registerForm input[type="email"],
+        #registerForm input[type="date"],
+        #registerForm select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        #registerForm button {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #registerForm button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <h1>Video KYC</h1>
-    <form id="registerForm">
-        <input type="text" name="name" placeholder="Name">
-        <input type="text" name="dob" placeholder="Date of Birth">
-        <input type="text" name="email" placeholder="Email">
-        <input type="hidden" name="imageData" id="imageData">
-        <button type="button" id="captureButton">Capture Image</button>
-        <button type="submit">Register</button>
-    </form>
-    
     <div id="videoContainer">
-        <!-- Video stream will be rendered here -->
+        <h1>Video KYC</h1>
         <video id="video" width="400" height="300" autoplay></video>
         <canvas id="canvas" style="display: none;"></canvas>
+        <button type="button" id="captureButton">Capture Image</button>
     </div>
     
+    <form id="registerForm">
+        <input type="text" name="name" placeholder="Name">
+        <input type="date" name="dob" placeholder="Date of Birth">
+        <input type="text" name="address" placeholder="Address">
+        <input type="text" name="panAadhaar" placeholder="PAN Card / Aadhaar">
+        <input type="text" name="signature" placeholder="Signature">
+        <select name="incomeRange">
+            <option value="" disabled selected>Income Range</option>
+            <option value="< 50,000">Less than 50,000</option>
+            <option value="50,000 - 1,00,000">50,000 - 1,00,000</option>
+            <option value="> 1,00,000">Greater than 1,00,000</option>
+        </select>
+        <select name="employmentType">
+            <option value="" disabled selected>Type of Employment</option>
+            <option value="Full-time">Full-time</option>
+            <option value="Part-time">Part-time</option>
+            <option value="Self-employed">Self-employed</option>
+            <option value="Unemployed">Unemployed</option>
+        </select>
+        <button type="submit">Register</button>
+    </form>
+
     <script>
         const registerForm = document.getElementById('registerForm');
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const captureButton = document.getElementById('captureButton');
-        
+
         // Access user's camera and stream video
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(stream => {
@@ -36,23 +103,24 @@
             .catch(error => {
                 console.error('Error accessing camera:', error);
             });
-        
+
         // Function to capture image from video stream
         function captureImage() {
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-            
-            // Convert canvas image to data URL
-            const imageDataURL = canvas.toDataURL('image/jpeg');
-            
-            // Set the captured image data to the hidden input field
-            document.getElementById('imageData').value = imageDataURL;
         }
-        
+
         // Event listener for capture button
         captureButton.addEventListener('click', () => {
             captureImage();
+        });
+
+        // Prevent form submission on Enter key press
+        registerForm.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+            }
         });
     </script>
 </body>
