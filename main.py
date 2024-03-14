@@ -17,14 +17,19 @@ def register_user():
             name = data.get('name')
             dob = data.get('dob')
             email = data.get('email')
+            address = data.get('address')
+            pan_aadhaar = data.get('panAadhaar')
+            signature = data.get('signature')
+            income_range = data.get('incomeRange')
+            employment_type = data.get('employmentType')
             imageData = data.get('imageData')
             
-            if not name or not dob or not email or not imageData:
+            if not all([name, dob, email, address, pan_aadhaar, signature, income_range, employment_type, imageData]):
                 return jsonify({'error': 'Missing required fields'}), 400
             
             # Write data to CSV file
             with open('user_data.csv', mode='a', newline='') as file:
-                writer = csv.DictWriter(file, fieldnames=['name', 'dob', 'email', 'imageData'])
+                writer = csv.DictWriter(file, fieldnames=['name', 'dob', 'email', 'address', 'pan_aadhaar', 'signature', 'income_range', 'employment_type', 'imageData'])
                 if file.tell() == 0:
                     writer.writeheader()  # Write header if file is empty
                 writer.writerow(data)
